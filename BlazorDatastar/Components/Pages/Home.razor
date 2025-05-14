@@ -1,0 +1,16 @@
+﻿@page "/"
+@using BlazorDatastar.Components.Partials
+
+<PageTitle>Home</PageTitle>
+
+<div class="d-flex align-items-center">
+    <h1 class="me-3">Movie List</h1>
+    <div class="form-check form-switch" data-signals-auto-update__ifmissing="false">
+        <input class="form-check-input" type="checkbox" id="autoUpdateSwitch" data-bind-auto-update data-on-change="@@post('autoupdate')">
+        <label class="form-check-label" for="autoUpdateSwitch">Auto Update</label>
+    </div>
+</div>
+
+<MovieList />
+
+

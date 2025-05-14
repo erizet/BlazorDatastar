@@ -1,0 +1,67 @@
+﻿@using BlazorDatastar.Models
+@using BlazorDatastar.Utils
+@using Microsoft.AspNetCore.Antiforgery
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@inject IAntiforgery Antiforgery
+
+<tr class="movie-row">
+    <td>@Movie.Title</td>
+    <td>@FormattedAverageScore</td>
+    <td id="@GetVoteTdId()">
+        @if (Movie.HasUserVoted(CurrentUserId))
+        {
+            <div data-attr-hidden="$confirm==@Movie.Id">
+                <span class="badge bg-success">Voted</span>
+                <button class="btn btn-danger btn-sm ms-2" data-on-click="$confirm=@Movie.Id">✖</button>
+            </div>
+            <div data-attr-hidden="$confirm!=@Movie.Id">
+                <div>Sure?
+                    <button class="btn btn-primary btn-sm ms-2" data-on-click="$confirm=0; @GetDeleteUrl()">Yes</button>
+                    <button class="btn btn-secondary btn-sm ms-2" data-on-click="$confirm=0">No</button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <form method="post" data-on-submit="@GetPostUrl()" action="@GetUrl()" class="d-flex align-items-center gap-2">
+                <AntiforgeryToken />
+                <select name="score" class="form-select form-select-sm w-auto">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        <option value="@i">@i</option>
+                    }
+                </select>
+                <button type="submit" class="btn btn-primary btn-sm">Vote</button>
+            </form>
+        }
+    </td>
+</tr>
+
+@code {
+    [Parameter] public Movie Movie { get; set; } = default!;
+
+    private Guid CurrentUserId => Guid.Parse(CookieHelper.GetOrCreateUserId(HttpContextAccessor.HttpContext!));
+
+    private string GetVoteTdId()
+    {
+        return $"vote-td-{Movie.Id}";
+    }
+
+    private string GetUrl()
+    {
+        return $"/vote/{Movie.Id}";
+    }
+
+    private string GetPostUrl()
+    {
+        return $"@post('{GetUrl()}', {{contentType: 'form'}})";
+    }
+
+    private string GetDeleteUrl()
+    {
+        return $"@delete('{GetUrl()}')";
+    }
+
+    private string FormattedAverageScore => Movie?.AverageScore.ToString("F2") ?? "0.00";
+}

@@ -1,0 +1,68 @@
+@page "/ordinary"
+@attribute [StreamRendering(true)]
+
+<PageTitle>Ordinary Form</PageTitle>
+
+<h1>Ordinary Form</h1>
+
+<p>This is the Ordinary Form page.</p>
+
+@if (_isSaving)
+{
+    <p>Saving...</p>
+}
+else if (_isSubmitted)
+{
+    <p>Form submitted: @formData.ToString()</p>
+}
+else
+{
+    <EditForm Model="@formData" OnValidSubmit="@HandleValidSubmit" FormName="ordinaryForm" Enhance>
+        <DataAnnotationsValidator />
+        <ValidationSummary class="alert alert-danger" />
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <InputText id="name" @bind-Value="formData.Name" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label for="amount" class="form-label">Amount:</label>
+            <InputNumber id="amount" @bind-Value="formData.Amount" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </EditForm>
+}
+
+@code {
+    private bool _isSubmitted = false;
+    private bool _isSaving = false;
+
+    [SupplyParameterFromForm]
+    private FormData formData { get; set; } = new FormData();
+
+    private async Task HandleValidSubmit()
+    {
+        _isSaving = true;
+        _isSubmitted = false;
+
+        await Task.Delay(2000); // Simulate a save operation
+
+        _isSubmitted = true;
+        _isSaving = false;
+        // Handle the form submission
+
+        Console.WriteLine(formData.ToString());
+    }
+
+    public class FormData
+    {
+        public string Name { get; set; }
+        public decimal Amount { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Name}, {Amount} pieces.";
+        }
+
+    }
+}

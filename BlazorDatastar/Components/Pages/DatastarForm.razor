@@ -1,0 +1,38 @@
+@page "/ds-form"
+
+<PageTitle>Datastar Form</PageTitle>
+
+<h1>Datastar Form</h1>
+
+<p>This is a test page for posting with Datastar.</p>
+
+<div id="edit">
+    <form method="post" data-on-submit="@@post('/post', {contentType: 'form'})" class="needs-validation">
+        <AntiforgeryToken />
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <input id="name" type="text" name="name" value="@formData.Name" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label for="amount" class="form-label">Amount:</label>
+            <input id="amount" type="number" name="amount" value="@formData.Amount" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+@code {
+    private FormData formData { get; set; } = new FormData();
+
+    public class FormData
+    {
+        public string Name { get; set; }
+        public decimal Amount { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Name}, {Amount} pieces.";
+        }
+    }
+}

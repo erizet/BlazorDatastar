@@ -1,0 +1,17 @@
+@using BlazorDatastar.Models
+@using BlazorDatastar.Utils
+@inject IHttpContextAccessor HttpContextAccessor
+
+<div data-signals-confirm="0" data-on-load="$confirm==0 && @@get('/movielist')">
+    <MovieTable Movies="@Movies" />
+</div>
+
+<code>
+    <pre>User id: @UserId</pre>
+    <pre data-json-signals></pre>
+</code>
+
+@code {
+    [Parameter] public IEnumerable<Movie> Movies { get; set; } = [];
+    private string UserId => CookieHelper.GetOrCreateUserId(HttpContextAccessor.HttpContext!);
+}
