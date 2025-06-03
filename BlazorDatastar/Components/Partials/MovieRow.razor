@@ -6,21 +6,22 @@
 @inject IAntiforgery Antiforgery
 
 <tr class="movie-row">
-    <td>@Movie.Title</td>
-    <td>@FormattedAverageScore</td>
-    <td id="@GetVoteTdId()">
+    <td class="movie-table-title">@Movie.Title</td>
+    <td class="movie-table-score">@FormattedAverageScore</td>
+    <td class="movie-table-actions" id="@GetVoteTdId()">
         @if (Movie.HasUserVoted(CurrentUserId))
         {
-            <div data-attr-hidden="$confirm==@Movie.Id">
-                <span class="badge bg-success">Voted</span>
-                <button class="btn btn-danger btn-sm ms-2" data-on-click="$confirm=@Movie.Id">✖</button>
-            </div>
-            <div data-attr-hidden="$confirm!=@Movie.Id">
-                <div>Sure?
-                    <button class="btn btn-primary btn-sm ms-2" data-on-click="$confirm=0; @GetDeleteUrl()">Yes</button>
-                    <button class="btn btn-secondary btn-sm ms-2" data-on-click="$confirm=0">No</button>
-                </div>
-            </div>
+            <confirmation-view timeout="3000">
+                <span slot="initial-content">
+                    <span class="badge bg-success">Voted</span>
+                    <button class="btn btn-danger btn-sm ms-2">✖</button>
+                </span>
+                <span slot="confirmation-content">
+                    Sure?
+                    <button class="btn btn-primary btn-sm ms-2" data-action="confirm" data-on-click="@GetDeleteUrl()">Yes</button>
+                    <button class="btn btn-secondary btn-sm ms-2" data-action="confirm">No</button>        
+                </span>
+            </confirmation-view>
         }
         else
         {

@@ -58,3 +58,21 @@ h1:focus {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+.movie-table-title {
+    width: 40%;
+    min-width: 120px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.movie-table-score {
+    width: 20%;
+    min-width: 80px;
+    text-align: center;
+}
+.movie-table-actions {
+    width: 40%;
+    min-width: 120px;
+    overflow: clip
+}
