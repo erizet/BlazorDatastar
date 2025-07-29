@@ -7,7 +7,7 @@
 
 <tr class="movie-row">
     <td class="movie-table-title">@Movie.Title</td>
-    <td class="movie-table-score">@FormattedAverageScore</td>
+    <td class="movie-table-score @(Flash ? "cell-changed-animation" : null)" data-on-animationend="el.classList.remove('cell-changed-animation')" id="@GetScoreTdId()">@FormattedAverageScore</td>
     <td class="movie-table-actions" id="@GetVoteTdId()">
         @if (Movie.HasUserVoted(CurrentUserId))
         {
@@ -41,12 +41,18 @@
 
 @code {
     [Parameter] public Movie Movie { get; set; } = default!;
+    [Parameter] public bool Flash { get; set; } = false;
 
     private Guid CurrentUserId => Guid.Parse(CookieHelper.GetOrCreateUserId(HttpContextAccessor.HttpContext!));
 
     private string GetVoteTdId()
     {
         return $"vote-td-{Movie.Id}";
+    }
+
+    private string GetScoreTdId()
+    {
+        return $"score-td-{Movie.Id}";
     }
 
     private string GetUrl()

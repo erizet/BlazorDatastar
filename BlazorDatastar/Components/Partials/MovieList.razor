@@ -2,7 +2,7 @@
 @using BlazorDatastar.Utils
 @inject IHttpContextAccessor HttpContextAccessor
 
-<div data-signals-confirm="0" data-on-load="$confirm==0 && @@get('/movielist')">
+<div data-signals-confirm="0" data-on-load="@@get('/movielist')">
     <MovieTable Movies="@Movies" />
 </div>
 
@@ -12,6 +12,6 @@
 </code>
 
 @code {
-    [Parameter] public IEnumerable<Movie> Movies { get; set; } = [];
+    [Parameter] public IEnumerable<(Movie movie, bool updated)> Movies { get; set; } = [];
     private string UserId => CookieHelper.GetOrCreateUserId(HttpContextAccessor.HttpContext!);
 }

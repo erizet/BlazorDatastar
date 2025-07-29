@@ -74,5 +74,26 @@ h1:focus {
 .movie-table-actions {
     width: 40%;
     min-width: 120px;
-    overflow: clip
+    overflow: clip;
+}
+
+@keyframes flash {
+    0% {
+        opacity: 1;
+        background-color: lightblue;
+        color: transparent;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        background-color: inherit;
+        color: inherit;
+    }
+}
+
+.cell-changed-animation {
+    animation: flash 1s forwards;
 }

@@ -99,16 +99,19 @@ namespace BlazorDatastar
                 {
                     await dbs.MergeSignalsAsync(JsonSerializer.Serialize(new MySignals() { AutoUpdate = autoUpdate }));
                 }
-                async Task SendList()
+                async Task SendList(int[] updatedMovies)
                 {
-                    var movies = await movieRepo.GetMoviesAsync();
+                    var movies = (await movieRepo.GetMoviesAsync()).Select(m => (m, updatedMovies.Contains(m.Id)));
                     await dbs.MergeComponentAsFragementAsync<MovieTable>(
                         new Dictionary<string, object?> { { nameof(MovieTable.Movies), movies } },
                         new ServerSentEventMergeFragmentsOptions()
+                        {
+                            MergeMode = StarFederation.Datastar.FragmentMergeMode.Morph
+                        }
                     );
                 }
 
-                await SendList();
+                await SendList([]);
                 await SendAutoUpdate(autoStatus.AutoUpdate);
 
                 await using var reader = dispatcher.CreateReader();
@@ -116,7 +119,7 @@ namespace BlazorDatastar
                 {
                     if (upd is MovieUpdated movieUpdated)
                     {
-                        await SendList();
+                        await SendList([movieUpdated.MovieId]);
                     }
                     else if (upd is AutoUpdateChangedEvent evt)
                     {
